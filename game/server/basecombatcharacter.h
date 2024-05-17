@@ -299,7 +299,8 @@ public:
 	virtual void			Event_Dying();
 	// character died and should become a ragdoll now
 	// return true if converted to a ragdoll, false to use AI death
-	virtual bool			BecomeRagdoll( const CTakeDamageInfo &info, const Vector &forceVector );
+    virtual bool			BecomeRagdoll( const CTakeDamageInfo &info, const Vector &forceVector, CBaseEntity ** );
+    virtual bool			BecomeRagdoll( const CTakeDamageInfo &info, const Vector &forceVector );
 	virtual void			FixupBurningServerRagdoll( CBaseEntity *pRagdoll );
 
 	virtual bool			BecomeRagdollBoogie( CBaseEntity *pKiller, const Vector &forceVector, float duration, int flags );
