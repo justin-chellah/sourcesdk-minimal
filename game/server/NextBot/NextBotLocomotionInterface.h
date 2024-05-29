@@ -151,6 +151,7 @@ public:
 	 */
 	virtual bool ShouldCollideWith( const CBaseEntity *object ) const	{ return true; }
 
+	virtual bool IsAllowedToAvoid( void ) const	{ return true; }
 
 protected:
 	virtual void AdjustPosture( const Vector &moveGoal );
