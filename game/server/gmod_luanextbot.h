@@ -1,6 +1,9 @@
 #pragma once
 
-#include "NextBot/NextBotGroundLocomotion.h"
+#include "NextBotGroundLocomotion.h"
+#include "NextBotBodyInterface.h"
+#include "NextBot.h"
+#include "NextBotBehavior.h"
 
 class CLuaLocomotion : public NextBotGroundLocomotion
 {
@@ -49,3 +52,88 @@ private:
     void* m_LuaData;
     class CLuaObject* m_LuaLocomotion;
 };
+
+class CLuaNextBotBody : public IBody
+{
+public:
+    CLuaNextBotBody( INextBot* bot );
+    virtual ~CLuaNextBotBody() { }
+
+    virtual void Update( void ) override;
+
+    /**
+     * Begin an animation activity, return false if we cant do that right now.
+     */
+    virtual bool StartActivity( Activity act, unsigned int flags = 0 ) override;
+
+    virtual Activity GetActivity( void ) const override;							// return currently animating activity
+    virtual bool IsActivity( Activity act ) const override;						    // return true if currently animating activity matches the given one
+
+    virtual float GetHullWidth( void ) const override;							    // width of bot's collision hull in XY plane
+    virtual float GetHullHeight( void ) const override;							    // height of bot's current collision hull based on posture
+    virtual float GetStandHullHeight( void ) const override;					    // height of bot's collision hull when standing
+    virtual const Vector& GetHullMins( void ) const override;					    // return current collision hull minimums based on actual body posture
+    virtual const Vector& GetHullMaxs( void ) const override;					    // return current collision hull maximums based on actual body posture
+
+    virtual unsigned int GetSolidMask( void ) const override;					    // return the bot's collision mask (hack until we get a general hull trace abstraction here or in the locomotion interface)
+    virtual unsigned int GetCollisionGroup( void ) const override;
+};
+
+class CLuaNextBotVision : public IVision
+{
+public:
+    CLuaNextBotVision( CLuaNextBot* bot );
+    virtual ~CLuaNextBotVision() { }
+
+    virtual float GetMaxVisionRange( void ) const;
+
+    virtual void SetMaxVisionRange( float );
+};
+
+class CLuaNextBot : public NextBotCombatCharacter
+{
+public:
+    DECLARE_CLASS( CLuaNextBot, NextBotCombatCharacter );
+    DECLARE_SERVERCLASS();
+
+    CLuaNextBot();
+    virtual ~CLuaNextBot();
+
+    virtual bool ShouldCollide( int collisionGroup, int contentsMask ) const;
+
+    virtual void Spawn( void );
+
+    virtual bool KeyValue( const char* szKeyName, const char* szValue );
+
+    virtual int	ObjectCaps( void );
+    virtual bool AcceptInput( const char* szInputName, CBaseEntity* pActivator, CBaseEntity* pCaller, variant_t Value, int outputID );
+
+    virtual void OnRestore();
+
+    virtual void TraceAttack( const CTakeDamageInfo& info, const Vector& vecDir, trace_t* ptr, CDmgAccumulator* pAccumulator = NULL );
+    virtual int OnTakeDamage( const CTakeDamageInfo& info );
+
+    virtual void UpdateOnRemove( void );
+
+    virtual bool UsesLua();
+    virtual void SetUseType( int );
+    virtual const char* GetLuaScriptName();
+    virtual void InitializeScriptedEntity( const char* );
+    virtual void Lua_OnEntityInitialized();
+    virtual CLuaNextBot* GetNextBot();
+    virtual void* Lua_GetLuaClass();
+
+    virtual void HandleAnimEvent( animevent_t* pEvent );
+
+    virtual bool IsRemovedOnReset( void ) const;
+
+    // INextBot
+    DECLARE_INTENTION_INTERFACE( CLuaNextBot )
+    virtual CLuaLocomotion *GetLocomotionInterface( void ) const;
+    virtual CLuaNextBotBody *GetBodyInterface( void ) const;
+    virtual CLuaNextBotVision *GetVisionInterface( void ) const;
+};
+
+inline CLuaNextBotVision::CLuaNextBotVision( CLuaNextBot* bot ) : IVision( bot )
+{
+}
