@@ -32,6 +32,7 @@ class IEntitySaveUtils;
 class CRecipientFilter;
 class CStudioHdr;
 class ILuaObject;
+class CLuaNextBot;
 
 // Matching the high level concept is significantly better than other criteria
 // FIXME:  Could do this in the script file by making it required and bumping up weighting there instead...
@@ -1841,7 +1842,7 @@ public:
 	virtual void SetLuaTable( ILuaObject * );
 	virtual bool HasLuaTable();
 	virtual void ForcePhysicsDropObject();
-	virtual INextBot *GetNextBot();
+	virtual CLuaNextBot *GetNextBot();
 	virtual void SetPhysicsAttacker( CBasePlayer*, float );
 	virtual void StartDriving( CBasePlayer * );
 	virtual void FinishDriving( CBasePlayer * );
