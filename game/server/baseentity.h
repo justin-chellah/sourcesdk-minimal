@@ -33,6 +33,7 @@ class CRecipientFilter;
 class CStudioHdr;
 class ILuaObject;
 class CLuaNextBot;
+class CBoneFollowerManager;
 
 // Matching the high level concept is significantly better than other criteria
 // FIXME:  Could do this in the script file by making it required and bumping up weighting there instead...
@@ -1849,6 +1850,10 @@ public:
 	virtual bool GMOD_ShouldPreventTransmitToPlayer( CBasePlayer * );
 	virtual void GMOD_SetShouldPreventTransmitToPlayer( CBasePlayer *, bool );
 	virtual void *Lua_GetLuaClass();
+	virtual void GMOD_CreateBoneFollowers( int, const char ** );
+	virtual void GMOD_UpdateBoneFollowers();
+	virtual void GMOD_DestroyBoneFollowers();
+	virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
 };
 
 // Send tables exposed in this module.

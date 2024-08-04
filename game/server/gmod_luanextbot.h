@@ -122,6 +122,10 @@ public:
     virtual void Lua_OnEntityInitialized();
     virtual CLuaNextBot* GetNextBot();
     virtual void* Lua_GetLuaClass();
+    virtual void GMOD_CreateBoneFollowers( int, const char** );
+    virtual void GMOD_UpdateBoneFollowers();
+    virtual void GMOD_DestroyBoneFollowers();
+    virtual CBoneFollowerManager* GMOD_GetBoneFollowerMgr();
 
     virtual void HandleAnimEvent( animevent_t* pEvent );
 
