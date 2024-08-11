@@ -88,7 +88,8 @@ public:
 
 		return false; 
 	}
-
+	
+	virtual bool ShouldPuntUseLaunchForces( PhysGunForce_t reason ) { return ( reason == PHYSGUN_FORCE_PUNTED ); }
 	virtual QAngle PreferredCarryAngles( void ) { return m_preferredCarryAngles; }
 
 	virtual void Ignite( float flFlameLifetime, bool bNPCOnly, float flSize = 0.0f, bool bCalledByLevelDesigner = false );
@@ -327,8 +328,7 @@ protected:
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-DECLARE_AUTO_LIST( IPhysicsPropAutoList );
-class CPhysicsProp : public CBreakableProp, public IPhysicsPropAutoList
+class CPhysicsProp : public CBreakableProp, public INavAvoidanceObstacle
 {
 	DECLARE_CLASS( CPhysicsProp, CBreakableProp );
 	DECLARE_SERVERCLASS();
@@ -368,6 +368,13 @@ public:
 	float GetMass() const;
 
 	void ClearFlagsThink( void );
+	
+	virtual bool IsPotentiallyAbleToObstructNavAreas( void ) const;	// could we at some future time obstruct nav?
+	virtual float GetNavObstructionHeight( void ) const;			// height at which to obstruct nav areas
+	virtual bool CanObstructNavAreas( void ) const;					// can we obstruct nav right this instant?
+	virtual CBaseEntity *GetObstructingEntity( void ) { return this; }
+	virtual void OnNavMeshLoaded( void );
+	void NavThink( void );
 
 	virtual int OnTakeDamage( const CTakeDamageInfo &info );
 	int DrawDebugTextOverlays(void);
