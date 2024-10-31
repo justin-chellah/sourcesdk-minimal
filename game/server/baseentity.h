@@ -1666,7 +1666,7 @@ private:
 	EHANDLE			m_pBlocker;
 
 	// was pev->gravity;
-	float			m_flGravity;  // rename to m_flGravityScale;
+	CNetworkVarForDerived( float, m_flGravity );  // rename to m_flGravityScale;
 	// was pev->friction
 	CNetworkVarForDerived( float, m_flFriction );
 	CNetworkVar( float, m_flElasticity );
@@ -1850,10 +1850,10 @@ public:
 	virtual bool GMOD_ShouldPreventTransmitToPlayer( CBasePlayer * );
 	virtual void GMOD_SetShouldPreventTransmitToPlayer( CBasePlayer *, bool );
 	virtual void *Lua_GetLuaClass();
-	virtual void GMOD_CreateBoneFollowers( int, const char ** );
-	virtual void GMOD_UpdateBoneFollowers();
-	virtual void GMOD_DestroyBoneFollowers();
-	virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
+    virtual void GMOD_CreateBoneFollowers( int, const char ** );
+    virtual void GMOD_UpdateBoneFollowers();
+    virtual void GMOD_DestroyBoneFollowers();
+    virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
 };
 
 // Send tables exposed in this module.
