@@ -1,6 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose:
 //
 // $NoKeywords: $
 //
@@ -95,9 +95,10 @@ enum NavAttributeType
 	NAV_MESH_OBSTACLE_TOP	= 0x00004000,				// this nav area is the climb point on the tip of an obstacle
 	NAV_MESH_CLIFF			= 0x00008000,				// this nav area is adjacent to a drop of at least CliffHeight
 
-	NAV_MESH_FIRST_CUSTOM	= 0x00010000,				// apps may define custom app-specific bits starting with this value
+	NAV_MESH_BLOCKED	= 0x00010000,
 	NAV_MESH_LAST_CUSTOM	= 0x04000000,				// apps must not define custom app-specific bits higher than with this value
 
+	NAV_MESH_BLOCKED_PROPDOOR	= 0x10000000,				// area is blocked by prop_door_rotating
 	NAV_MESH_FUNC_COST		= 0x20000000,				// area has designer specified cost controlled by func_nav_cost entities
 	NAV_MESH_HAS_ELEVATOR	= 0x40000000,				// area is in an elevator's path
 	NAV_MESH_NAV_BLOCKER	= 0x80000000				// area is blocked by nav blocker ( Alas, needed to hijack a bit in the attributes to get within a cache line [7/24/2008 tom])
@@ -207,7 +208,7 @@ struct Extent
 				pos.y >= lo.y && pos.y <= hi.y &&
 				pos.z >= lo.z && pos.z <= hi.z);
 	}
-	
+
 	// return true if this extent overlaps the given one
 	bool IsOverlapping( const Extent &other ) const
 	{
