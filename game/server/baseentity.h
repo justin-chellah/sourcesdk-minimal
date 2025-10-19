@@ -20,6 +20,7 @@
 #include "ServerNetworkProperty.h"
 #include "shareddefs.h"
 #include "engine/ivmodelinfo.h"
+#include "GarrysMod/Lua/LuaObject.h"
 
 class CDamageModifier;
 class CDmgAccumulator;
@@ -31,7 +32,6 @@ class IResponseSystem;
 class IEntitySaveUtils;
 class CRecipientFilter;
 class CStudioHdr;
-class ILuaObject;
 class CLuaNextBot;
 class CBoneFollowerManager;
 
@@ -1837,10 +1837,10 @@ public:
 	virtual void OverridePosition();
 	virtual void InitializeScriptedEntity( const char * );
 	virtual void ClearLuaData();
-	virtual ILuaObject *GetLuaTable();
+	virtual GarrysMod::Lua::ILuaObject *GetLuaTable();
 	virtual void *GetLuaEntity();
 	virtual void Lua_OnEntityInitialized();
-	virtual void SetLuaTable( ILuaObject * );
+	virtual void SetLuaTable( GarrysMod::Lua::ILuaObject * );
 	virtual bool HasLuaTable();
 	virtual void ForcePhysicsDropObject();
 	virtual CLuaNextBot *GetNextBot();
