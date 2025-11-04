@@ -1854,6 +1854,56 @@ public:
     virtual void GMOD_UpdateBoneFollowers();
     virtual void GMOD_DestroyBoneFollowers();
     virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
+	
+    char m_szOverrideMaterial[ 256 ];
+    char m_szRealClassName[ 256 ];
+    int m_OverrideMaterial;
+    int m_RealClassName;
+    bool m_bOnFire;
+    float m_CreationTime;
+    int m_iParentPhysicsNum;
+    const char* m_szOverrideSubMaterials[ 32 ];
+    int m_OverrideSubMaterials[ 32 ];
+    CUtlVector< EHANDLE > m_hDeleteOnRemove;
+
+    // CLuaObject layout
+    struct
+    {
+        /* 0 */ GarrysMod::Lua::ILuaObject* vptr;
+        /* 4 */ bool m_isUserData;
+        /* 8 */ int m_iStackPos;
+        /* 12 */ int m_iReference;
+        /* 16 */ GarrysMod::Lua::ILuaBase* m_pLua;
+    }
+    m_LuaCalcAbsolutePosition;
+
+    GarrysMod::Lua::ILuaObject* m_pLuaTable;
+    GarrysMod::Lua::ILuaObject* m_pLuaData;
+    bool m_GMOD_bool[ 32 ];
+    float m_GMOD_float[ 32 ];
+    int m_GMOD_int[ 32 ];
+    Vector m_GMOD_Vector[ 32 ];
+    QAngle m_GMOD_QAngle[ 32 ];
+    EHANDLE m_GMOD_EHANDLE[ 32 ];
+    char m_GMOD_String0[ 512 ];
+    char m_GMOD_String1[ 512 ];
+    char m_GMOD_String2[ 512 ];
+    char m_GMOD_String3[ 512 ];
+    SendProp* m_GMOD_DataTable;
+    int m_iCreationID;
+    int m_iMapCreatedID;
+    EHANDLE m_hDriver;
+    CUtlLinkedList< EHANDLE > m_hPlayersToPreventTransmit;
+    int m_iGModFlags;
+
+    struct
+    {
+        void* m_pNext;
+        void* m_pPrev;
+        void* m_pData;
+        bool m_bInitialized;
+    } 
+    m_UnknownArray[ 4 ];
 };
 
 // Send tables exposed in this module.
