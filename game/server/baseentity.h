@@ -1448,7 +1448,7 @@ public:
 	void					PhysicsCheckWaterTransition( void );
 	void					PhysicsStepRecheckGround();
 	// Computes the water level + type
-	void					UpdateWaterState();
+	virtual void			UpdateWaterState();
 	bool					IsEdictFree() const { return edict()->IsFree(); }
 
 	// Callbacks for the physgun/cannon picking up an entity
@@ -1854,7 +1854,7 @@ public:
     virtual void GMOD_UpdateBoneFollowers();
     virtual void GMOD_DestroyBoneFollowers();
     virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
-	
+
     char m_szOverrideMaterial[ 256 ];
     char m_szRealClassName[ 256 ];
     int m_OverrideMaterial;
