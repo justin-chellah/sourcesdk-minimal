@@ -316,14 +316,14 @@ public:
 	void SetLightingOrigin( string_t strLightingOrigin );
 	CBaseEntity *GetLightingOrigin();
 
-	virtual void SetOverrideViewTarget( Vector );
-	virtual int GetPhysBoneNumber( int );
-	virtual void SetBoneManipulator( CBaseEntity * );
-	virtual CBaseEntity *GetBoneManipulator( bool );
-	virtual void SetFlexManipulator( CBaseEntity * );
-	virtual CBaseEntity *GetFlexManipulator( bool );
-	virtual QAngle GetAnimStateRenderAngles();
-	virtual void SetAnimStateRenderAngles( QAngle& );
+	virtual void SetOverrideViewTarget( Vector viewTarget );
+	virtual int GetPhysBoneNumber( int index );
+	virtual void SetBoneManipulator( CBaseEntity *entity );
+	virtual CBaseEntity *GetBoneManipulator( bool bCreateIfMissing );
+	virtual void SetFlexManipulator( CBaseEntity *entity );
+	virtual CBaseEntity *GetFlexManipulator( bool bCreateIfMissing );
+	virtual QAngle GetAnimStateRenderAngles( void );
+	virtual void SetAnimStateRenderAngles( QAngle &angles );
 
 	const float* GetPoseParameterArray() { return m_flPoseParameter.Base(); }
 	const float* GetEncodedControllerArray() { return m_flEncodedController.Base(); }
@@ -422,6 +422,11 @@ protected:
 	CNetworkVar( float, m_fadeMinDist );	// Point at which fading is absolute
 	CNetworkVar( float, m_fadeMaxDist );	// Point at which fading is inactive
 	CNetworkVar( float, m_flFadeScale );	// Scale applied to min / max
+	CNetworkVar( Vector, m_OverrideViewTarget );
+	EHANDLE m_hFlame;
+	int m_iPhysBoneNumber[ 32 ];
+	CNetworkHandle( CBaseEntity, m_pBoneManipulator );
+	CNetworkHandle( CBaseEntity, m_pFlexManipulator );
 
 public:
 	COutputEvent m_OnIgnite;
@@ -430,6 +435,7 @@ private:
 	CStudioHdr			*m_pStudioHdr;
 	CThreadFastMutex	m_StudioHdrInitLock;
 	CThreadFastMutex	m_BoneSetupMutex;
+	uint32_t			m_unknown;
 
 // FIXME: necessary so that cyclers can hack m_bSequenceFinished
 friend class CFlexCycler;
