@@ -257,6 +257,7 @@ public:
 	CNetworkVector( m_vecLean );
 	CNetworkVector( m_vecShift );
 #endif
+	float m_unknown;    // maybe intended as a lean scale (default 1.0), currently unused
 };
 
 
