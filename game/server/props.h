@@ -89,7 +89,6 @@ public:
 		return false; 
 	}
 	
-	virtual bool ShouldPuntUseLaunchForces( PhysGunForce_t reason ) { return ( reason == PHYSGUN_FORCE_PUNTED ); }
 	virtual QAngle PreferredCarryAngles( void ) { return m_preferredCarryAngles; }
 
 	virtual void Ignite( float flFlameLifetime, bool bNPCOnly, float flSize = 0.0f, bool bCalledByLevelDesigner = false );
