@@ -36,8 +36,6 @@ public:
 		Reset();
 	}
 
-	virtual ~CUserCmd() { };
-
 	void Reset()
 	{
 		command_number = 0;
@@ -58,9 +56,6 @@ public:
 		mousedy = 0;
 
 		hasbeenpredicted = false;
-#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
-		entitygroundcontact.RemoveAll();
-#endif
 	}
 
 	CUserCmd& operator =( const CUserCmd& src )
@@ -86,10 +81,6 @@ public:
 		mousedy				= src.mousedy;
 
 		hasbeenpredicted	= src.hasbeenpredicted;
-
-#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
-		entitygroundcontact			= src.entitygroundcontact;
-#endif
 
 		return *this;
 	}
@@ -131,6 +122,11 @@ public:
 		upmove = 0.f;
 		buttons = 0;
 		impulse = 0;
+        istyping = false;
+        isforced = false;
+        memset( prevbuttons, 0, sizeof( prevbuttons ) );
+        isworldclicking = false;
+        memset( motionsensorpos, 0, sizeof( motionsensorpos ) );
 	}
 
 	// For matching server and client commands for debugging
@@ -150,27 +146,34 @@ public:
 	float	upmove;         
 	// Attack button states
 	int		buttons;		
-	// Impulse command issued.
-	byte    impulse;        
 	// Current weapon id
 	int		weaponselect;	
 	int		weaponsubtype;
 
-	int		random_seed;	// For shared random functions
+    int		random_seed;	// For shared random functions
 #ifdef GAME_DLL
 	int		server_random_seed; // Only the server populates this seed
 #endif
-
+	
 	short	mousedx;		// mouse accum in x from create move
 	short	mousedy;		// mouse accum in y from create move
 
 	// Client only, tracks whether we've predicted this command at least once
 	bool	hasbeenpredicted;
 
-	// Back channel to communicate IK state
-#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
-	CUtlVector< CEntityGroundContact > entitygroundcontact;
-#endif
+    // Impulse command issued.
+	byte    impulse;        
+
+    bool	istyping;
+    bool	isforced;
+
+    byte	prevbuttons[5];
+    byte	mousewheel;
+
+    bool	isworldclicking;
+    Vector	worldclickaimvector;
+
+    Vector	motionsensorpos[20];
 
 };
 

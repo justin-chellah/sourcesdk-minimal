@@ -402,12 +402,12 @@ private:
 	CNetworkVar( bool, m_bClientSideAnimation );
 	CNetworkVar( bool, m_bClientSideFrameReset );
 
-	CNetworkVar( int, m_nNewSequenceParity );
-	CNetworkVar( int, m_nResetEventsParity );
-
 	// Incremented each time the entity is told to do a muzzle flash.
 	// The client picks up the change and draws the flash.
 	CNetworkVar( unsigned char, m_nMuzzleFlashParity );
+
+	CNetworkVar( int, m_nNewSequenceParity );
+	CNetworkVar( int, m_nResetEventsParity );
 
 	CNetworkHandle( CBaseEntity, m_hLightingOrigin );
 	CNetworkHandle( CBaseEntity, m_hLightingOriginRelative );
@@ -422,11 +422,11 @@ protected:
 	CNetworkVar( float, m_fadeMinDist );	// Point at which fading is absolute
 	CNetworkVar( float, m_fadeMaxDist );	// Point at which fading is inactive
 	CNetworkVar( float, m_flFadeScale );	// Scale applied to min / max
-	CNetworkVar( Vector, m_OverrideViewTarget );
-	EHANDLE m_hFlame;
-	int m_iPhysBoneNumber[ 32 ];
-	CNetworkHandle( CBaseEntity, m_pBoneManipulator );
-	CNetworkHandle( CBaseEntity, m_pFlexManipulator );
+    CNetworkVar( Vector, m_OverrideViewTarget );
+    EHANDLE m_hFlame;
+    int m_iPhysBoneNumber[ 32 ];
+    CNetworkHandle( CBaseEntity, m_pBoneManipulator );
+    CNetworkHandle( CBaseEntity, m_pFlexManipulator );
 
 public:
 	COutputEvent m_OnIgnite;
@@ -435,7 +435,7 @@ private:
 	CStudioHdr			*m_pStudioHdr;
 	CThreadFastMutex	m_StudioHdrInitLock;
 	CThreadFastMutex	m_BoneSetupMutex;
-	uint32_t			m_unknown;
+    uint32_t            m_unknown;
 
 // FIXME: necessary so that cyclers can hack m_bSequenceFinished
 friend class CFlexCycler;

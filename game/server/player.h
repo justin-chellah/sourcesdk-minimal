@@ -452,7 +452,6 @@ public:
 	virtual void			OnEmitFootstepSound( const CSoundParameters& params, const Vector& vecOrigin, float fVolume ) {}
 
 	Class_T					Classify ( void );
-	virtual void			SetAnimation( PLAYER_ANIM playerAnim );
 	void					SetWeaponAnimType( const char *szExtention );
 
 	// custom player functions
@@ -548,7 +547,7 @@ public:
 	// mass/size limit set to zero for none
 	static bool				CanPickupObject( CBaseEntity *pObject, float massLimit, float sizeLimit );
 	virtual void			PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize = true ) {}
-	virtual void			ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis = NULL ) {}
+	virtual void			ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis = NULL, bool bPhysGunForceDrop = true ) {}
 	virtual float			GetHeldObjectMass( IPhysicsObject *pHeldObject );
 
 	void					CheckSuitUpdate();
@@ -564,7 +563,6 @@ public:
 
 	float					GetAutoaimScore( const Vector &eyePosition, const Vector &viewDir, const Vector &vecTarget, CBaseEntity *pTarget, float fScale, CBaseCombatWeapon *pActiveWeapon );
 	QAngle					AutoaimDeflection( Vector &vecSrc, autoaim_params_t &params );
-	virtual bool			ShouldAutoaim( void );
 	void					SetTargetInfo( Vector &vecSrc, float flDist );
 
 	void					SetViewEntity( CBaseEntity *pEntity );
@@ -603,8 +601,6 @@ public:
 	void SetPunchAngle( const QAngle &punchAngle );
 
 	virtual void DoMuzzleFlash();
-
-	const char *GetLastKnownPlaceName( void ) const	{ return m_szLastPlaceName; }	// return the last nav place name the player occupied
 
 	virtual void			CheckChatText( char *p, int bufsize ) {}
 
@@ -646,16 +642,6 @@ public:
 	void					UpdatePhysicsShadowToPosition( const Vector &vecAbsOrigin );
 	void					UpdateVPhysicsPosition( const Vector &position, const Vector &velocity, float secondsToArrival );
 
-	// Hint system
-	virtual CHintSystem		*Hints( void ) { return NULL; }
-	bool					ShouldShowHints( void ) { return Hints() ? Hints()->ShouldShowHints() : false; }
-	void					SetShowHints( bool bShowHints ) { if (Hints()) Hints()->SetShowHints( bShowHints ); }
-	bool 					HintMessage( int hint, bool bForce = false ) { return Hints() ? Hints()->HintMessage( hint, bForce ) : false; }
-	void 					HintMessage( const char *pMessage ) { if (Hints()) Hints()->HintMessage( pMessage ); }
-	void					StartHintTimer( int iHintID ) { if (Hints()) Hints()->StartHintTimer( iHintID ); }
-	void					StopHintTimer( int iHintID ) { if (Hints()) Hints()->StopHintTimer( iHintID ); }
-	void					RemoveHintTimer( int iHintID ) { if (Hints()) Hints()->RemoveHintTimer( iHintID ); }
-
 	// Accessor methods
 	int		FragCount() const		{ return m_iFrags; }
 	int		DeathCount() const		{ return m_iDeaths;}
@@ -669,7 +655,6 @@ public:
 	inline void SetActivity( Activity eActivity ) { m_Activity = eActivity; }
 	bool	IsPlayerLockedInPlace() const { return m_iPlayerLocked != 0; }
 	bool	IsObserver() const		{ return (m_afPhysicsFlags & PFLAG_OBSERVER) != 0; }
-	bool	IsOnTarget() const		{ return m_fOnTarget; }
 	float	MuzzleFlashTime() const { return m_flFlashTime; }
 	float	PlayerDrownTime() const	{ return m_AirFinished; }
 
@@ -681,7 +666,6 @@ public:
 	virtual bool	IsReadyToSpawn( void ) { return true; }
 	virtual bool	ShouldGainInstantSpawn( void ) { return false; }
 	virtual void	ResetPerRoundStats( void ) { return; }
-	void			AllowInstantSpawn( void ) { m_bAllowInstantSpawn = true; }
 
 	virtual void	ResetScores( void ) { ResetFragCount(); ResetDeathCount(); }
 	void	ResetFragCount();
@@ -738,9 +722,9 @@ public:
 	int		GetLockViewanglesTickNumber() const { return m_iLockViewanglesTickNumber; }
 	QAngle	GetLockViewanglesData() const { return m_qangLockViewangles; }
 
-	int		GetFOV( void );														// Get the current FOV value
+	virtual int		GetFOV( void );														// Get the current FOV value
 	int		GetDefaultFOV( void ) const;										// Default FOV if not specified otherwise
-	int		GetFOVForNetworking( void );										// Get the current FOV used for network computations
+	virtual int		GetFOVForNetworking( void );										// Get the current FOV used for network computations
 	bool	SetFOV( CBaseEntity *pRequester, int FOV, float zoomRate = 0.0f, int iZoomStart = 0 );	// Alters the base FOV of the player (must have a valid requester)
 	void	SetDefaultFOV( int FOV );											// Sets the base FOV if nothing else is affecting it by zooming
 	CBaseEntity *GetFOVOwner( void ) { return m_hZoomOwner; }
@@ -752,10 +736,6 @@ public:
 	// Movement constraints
 	void	ActivateMovementConstraint( CBaseEntity *pEntity, const Vector &vecCenter, float flRadius, float flConstraintWidth, float flSpeedFactor );
 	void	DeactivateMovementConstraint( );
-
-	// talk control
-	void	NotePlayerTalked() { m_fLastPlayerTalkTime = gpGlobals->curtime; }
-	float	LastTimePlayerTalked() { return m_fLastPlayerTalkTime; }
 
 	void	DisableButtons( int nButtons );
 	void	EnableButtons( int nButtons );
@@ -821,10 +801,6 @@ private:
 	void				AdjustPlayerTimeBase( int simulation_ticks );
 
 public:
-	
-	// How long since this player last interacted with something the game considers an objective/target/goal
-	float				GetTimeSinceLastObjective( void ) const { return ( m_flLastObjectiveTime == -1.f ) ? 999.f : gpGlobals->curtime - m_flLastObjectiveTime; }
-	void				SetLastObjectiveTime( float flTime ) { m_flLastObjectiveTime = flTime; }
 
 	// Used by gamemovement to check if the entity is stuck.
 	int m_StuckLast;
@@ -862,7 +838,6 @@ public:
 	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_iHealth );
 	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_vecBaseVelocity );
 	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_nNextThinkTick );
-	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_vecVelocity );
 	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_nWaterLevel );
 	
 	int						m_nButtons;
@@ -871,8 +846,6 @@ public:
 	int						m_afButtonLast;
 	int						m_afButtonDisabled;	// A mask of input flags that are cleared automatically
 	int						m_afButtonForced;	// These are forced onto the player's inputs
-
-	CNetworkVar( bool, m_fOnTarget );		//Is the crosshair on a target?
 
 	char					m_szAnimExtension[32];
 
@@ -900,7 +873,6 @@ public:
 private:
 
 	Activity				m_Activity;
-	float					m_flLastObjectiveTime;				// Last curtime player touched/killed something the gamemode considers an objective
 
 protected:
 
@@ -909,8 +881,6 @@ protected:
 								float& zNear, float& zFar, float& fov );
 	void					CalcObserverView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
 	void					CalcViewModelView( const Vector& eyeOrigin, const QAngle& eyeAngles);
-
-	virtual	void			Internal_HandleMapEvent( inputdata_t &inputdata ){}
 
 	// FIXME: Make these private! (tf_player uses them)
 
@@ -932,7 +902,7 @@ protected:
 
 	int						m_iVehicleAnalogBias;
 
-	void					UpdateButtonState( int nUserCmdButtonMask );
+	virtual void					UpdateButtonState( int nUserCmdButtonMask );
 
 	bool	m_bPauseBonusProgress;
 	CNetworkVar( int, m_iBonusProgress );
@@ -950,10 +920,10 @@ protected:
 	float					m_flDeathAnimTime;	// the time at which the player finished their death anim (used in PlayerDeathThink() and ShouldTransmit())
 
 	CNetworkVar( int, m_iObserverMode );	// if in spectator mode != 0
-	CNetworkVar( int,	m_iFOV );			// field of view
-	CNetworkVar( int,	m_iDefaultFOV );	// default field of view
-	CNetworkVar( int,	m_iFOVStart );		// What our FOV started at
-	CNetworkVar( float,	m_flFOVTime );		// Time our FOV change started
+	CNetworkVar( float,	m_iFOV );			// field of view
+	CNetworkVar( float,	m_iDefaultFOV );	// default field of view
+	CNetworkVar( float,	m_iFOVStart );		// What our FOV started at
+	CNetworkVar( double,	m_flFOVTime );		// Time our FOV change started
 	
 	int						m_iObserverLastMode; // last used observer mode
 	CNetworkHandle( CBaseEntity, m_hObserverTarget );	// entity handle to m_iObserverTarget
@@ -974,6 +944,7 @@ protected:
 	int						m_vphysicsCollisionState;
 
 	virtual int SpawnArmorValue( void ) const { return 0; }
+    virtual void UpdateFXVolume( void );
 
 	float					m_fNextSuicideTime; // the time after which the player can next use the suicide command
 	int						m_iSuicideCustomKillFlags;
@@ -982,6 +953,9 @@ protected:
 	float					m_fDelay;			// replay delay in seconds
 	float					m_fReplayEnd;		// time to stop replay mode
 	int						m_iReplayEntity;	// follow this entity in replay
+
+    virtual void UpdateTonemapController( void );
+    CNetworkHandle( CBaseEntity, m_hTonemapController );
 
 private:
 	void HandleFuncTrain();
@@ -1006,11 +980,6 @@ private:
 	int						m_iTargetVolume;// ideal sound volume. 
 	
 	int						m_rgItems[MAX_ITEMS];
-
-	// these are time-sensitive things that we keep track of
-	float					m_flSwimTime;		// how long player has been underwater
-	float					m_flDuckTime;		// how long we've been ducking
-	float					m_flDuckJumpTime;	
 
 	float					m_flSuitUpdate;					// when to play next suit update
 	int						m_rgSuitPlayList[CSUITPLAYLIST];// next sentencenum to play for suit update
@@ -1066,8 +1035,6 @@ protected:
 
 	float					m_flStepSoundTime;	// time to check for next footstep sound
 
-	bool					m_bAllowInstantSpawn;
-
 #if defined USES_ECON_ITEMS
 	// Wearables
 	CUtlVector<CHandle<CEconWearable > >	m_hMyWearables;
@@ -1108,9 +1075,6 @@ private:
 
 	// Clients try to run on their own realtime clock, this is this client's clock
 	CNetworkVar( int, m_nTickBase );
-
-	bool					m_bGamePaused;
-	float					m_fLastPlayerTalkTime;
 	
 	CNetworkVar( CBaseCombatWeaponHandle, m_hLastWeapon );
 
@@ -1123,7 +1087,7 @@ private:
 
 	bool					m_bPlayerUnderwater;
 
-	EHANDLE					m_hViewEntity;
+	CNetworkHandle( CBaseEntity, m_hViewEntity );
 
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );
@@ -1168,8 +1132,6 @@ protected:
 	Vector m_vecPreviouslyPredictedOrigin; // Used to determine if non-gamemovement game code has teleported, or tweaked the player's origin
 	int		m_nBodyPitchPoseParam;
 
-	CNetworkString( m_szLastPlaceName, MAX_PLACE_NAME_LENGTH );
-
 	char m_szNetworkIDString[MAX_NETWORKID_LENGTH];
 	CPlayerInfo m_PlayerInfo;
 
@@ -1191,14 +1153,7 @@ public:
 	inline void DisableAutoKick( bool disabled );
 
 	void	DumpPerfToRecipient( CBasePlayer *pRecipient, int nMaxRecords );
-	// NVNT returns true if user has a haptic device
-	virtual bool HasHaptics(){return m_bhasHaptics;}
-	// NVNT sets weather a user should receive haptic device messages.
-	virtual void SetHaptics(bool has) { m_bhasHaptics = has;}
 private:
-	// NVNT member variable holding if this user is using a haptic device.
-	bool m_bhasHaptics;
-
 	bool m_autoKickDisabled;
 
 	struct StepSoundCache_t
@@ -1218,12 +1173,55 @@ private:
 	// Store the last time we successfully processed a usercommand
 	float			m_flLastUserCommandTime;
 
-	// used to prevent achievement announcement spam
-	CUtlVector< float >		m_flAchievementTimes;
+    int				m_iMouseWheel;
+    short			m_nVoicePackets;
+    bool			m_bKickIssued;
+
+    bool			m_bIsWorldClicking;
+    Vector			m_worldClickAimVector;
+
+    int				m_nKickErrors;
+
+    float			m_flSpeakTime;
+
+    Vector			m_hullMins;
+    Vector			m_hullMaxs;
+    Vector			m_hullDuckMins;
+    Vector			m_hullDuckMaxs;
+
+    int				m_nLuaErrors;
+    float			m_flLuaErrorTime;
+
+    bool            m_bIsWorldClickingDisabled;
 
 public:
 	virtual unsigned int PlayerSolidMask( bool brushOnly = false ) const;	// returns the solid mask for the given player, so bots can have a more-restrictive set
 
+    virtual void OnPlayerSay( const char* message );
+    virtual bool RestrictPlayerPitch( void );
+
+    virtual float GetSprintSpeed( void );
+    virtual float GetWalkSpeed( void );
+    virtual float GetSlowWalkSpeed( void );
+    virtual float GetLadderSpeed( void );
+    virtual float GetCrouchedWalkSpeed( void );
+    virtual float GetDuckSpeed( void );
+    virtual float GetUnDuckSpeed( void );
+
+    virtual void SetSprintSpeed( float speed );
+    virtual void SetWalkSpeed( float speed );
+    virtual void SetSlowWalkSpeed( float speed );
+    virtual void SetLadderSpeed( float speed );
+    virtual void SetCrouchedWalkSpeed( float speed );
+    virtual void SetDuckSpeed( float speed );
+    virtual void SetUnDuckSpeed( float speed );
+
+    virtual bool CanAttack( void ) { return true; }
+
+    virtual int MouseWheel();
+    virtual int SetMouseWheel( int value );
+
+    virtual float GetMaxArmor();
 };
 
 typedef CHandle<CBasePlayer> CBasePlayerHandle;

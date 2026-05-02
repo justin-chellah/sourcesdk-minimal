@@ -455,7 +455,7 @@ protected:
 	void SetLastHitGroup( int nHitGroup )	{ m_LastHitGroup = nHitGroup; }
 
 public:
-	CNetworkVar( float, m_flNextAttack );			// cannot attack again until this time
+	CNetworkVar( double, m_flNextAttack );			// cannot attack again until this time
 
 #ifdef GLOWS_ENABLE
 protected:
@@ -537,6 +537,9 @@ protected:
 	CNavArea *m_lastNavArea;
 	CAI_MoveMonitor m_NavAreaUpdateMonitor;
 	int m_registeredNavTeam;	// ugly, but needed to clean up player team counts in nav mesh
+
+    bool m_bSuppressAmmoPickupSound;
+    bool m_bForceWeaponEquip;   // set in Player:Give
 };
 
 

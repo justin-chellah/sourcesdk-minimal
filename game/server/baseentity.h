@@ -758,18 +758,18 @@ public:
 
 	// Think functions with contexts
 	int		RegisterThinkContext( const char *szContext );
-	BASEPTR	ThinkSet( BASEPTR func, float flNextThinkTime = 0, const char *szContext = NULL );
-	void	SetNextThink( float nextThinkTime, const char *szContext = NULL );
-	float	GetNextThink( const char *szContext = NULL );
-	float	GetLastThink( const char *szContext = NULL );
+	BASEPTR	ThinkSet( BASEPTR func, double flNextThinkTime = 0, const char *szContext = NULL );
+	void	SetNextThink( double nextThinkTime, const char *szContext = NULL );
+    double	GetNextThink( const char *szContext = NULL );
+    double	GetLastThink( const char *szContext = NULL );
 	int		GetNextThinkTick( const char *szContext = NULL );
 	int		GetLastThinkTick( const char *szContext = NULL );
 
-	float				GetAnimTime() const;
-	void				SetAnimTime( float at );
+	double				GetAnimTime() const;
+	void				SetAnimTime( double at );
 
-	float				GetSimulationTime() const;
-	void				SetSimulationTime( float st );
+    double				GetSimulationTime() const;
+	void				SetSimulationTime( double st );
 
 	void				SetRenderMode( RenderMode_t nRenderMode );
 	RenderMode_t		GetRenderMode() const;
@@ -810,9 +810,9 @@ public:
 	void SetRenderColorA( byte a );
 
 	// was pev->animtime:  consider moving to CBaseAnimating
-	float		m_flPrevAnimTime;
-	CNetworkVar( float, m_flAnimTime );  // this is the point in time that the client will interpolate to position,angle,frame,etc.
-	CNetworkVar( float, m_flSimulationTime );
+	double		m_flPrevAnimTime;
+	CNetworkVar( double, m_flAnimTime );  // this is the point in time that the client will interpolate to position,angle,frame,etc.
+	CNetworkVar( double, m_flSimulationTime );
 
 	void IncrementInterpolationFrame(); // Call this to cause a discontinuity (teleport)
 
@@ -1034,8 +1034,8 @@ public:
 	void					StartGroundContact( CBaseEntity *ground );
 	void					EndGroundContact( CBaseEntity *ground );
 
-	void					SetGroundChangeTime( float flTime );
-	float					GetGroundChangeTime( void );
+	void					SetGroundChangeTime( double flTime );
+	double					GetGroundChangeTime( void );
 
 	// Remove this as ground entity for all object resting on this object
 	void					WakeRestingObjects();
@@ -1324,8 +1324,8 @@ public:
 	void					SetLocalTransform( const matrix3x4_t &localTransform );
 
 	// See CSoundEmitterSystem
-	void					EmitSound( const char *soundname, float soundtime = 0.0f, float *duration = NULL );  // Override for doing the general case of CPASAttenuationFilter filter( this ), and EmitSound( filter, entindex(), etc. );
-	void					EmitSound( const char *soundname, HSOUNDSCRIPTHANDLE& handle, float soundtime = 0.0f, float *duration = NULL );  // Override for doing the general case of CPASAttenuationFilter filter( this ), and EmitSound( filter, entindex(), etc. );
+	void					EmitSound( const char *soundname, double soundtime = 0.0f, float *duration = NULL );  // Override for doing the general case of CPASAttenuationFilter filter( this ), and EmitSound( filter, entindex(), etc. );
+	void					EmitSound( const char *soundname, HSOUNDSCRIPTHANDLE& handle, double soundtime = 0.0f, float *duration = NULL );  // Override for doing the general case of CPASAttenuationFilter filter( this ), and EmitSound( filter, entindex(), etc. );
 	void					StopSound( const char *soundname );
 	void					StopSound( const char *soundname, HSOUNDSCRIPTHANDLE& handle );
 	void					GenderExpandString( char const *in, char *out, int maxlen );
@@ -1337,8 +1337,8 @@ public:
 	static bool	GetParametersForSound( const char *soundname, CSoundParameters &params, char const *actormodel );
 	static bool	GetParametersForSound( const char *soundname, HSOUNDSCRIPTHANDLE& handle, CSoundParameters &params, char const *actormodel );
 
-	static void EmitSound( IRecipientFilter& filter, int iEntIndex, const char *soundname, const Vector *pOrigin = NULL, float soundtime = 0.0f, float *duration = NULL );
-	static void EmitSound( IRecipientFilter& filter, int iEntIndex, const char *soundname, HSOUNDSCRIPTHANDLE& handle, const Vector *pOrigin = NULL, float soundtime = 0.0f, float *duration = NULL );
+	static void EmitSound( IRecipientFilter& filter, int iEntIndex, const char *soundname, const Vector *pOrigin = NULL, double soundtime = 0.0f, float *duration = NULL );
+	static void EmitSound( IRecipientFilter& filter, int iEntIndex, const char *soundname, HSOUNDSCRIPTHANDLE& handle, const Vector *pOrigin = NULL, double soundtime = 0.0f, float *duration = NULL );
 	static void StopSound( int iEntIndex, const char *soundname );
 	static soundlevel_t LookupSoundLevel( const char *soundname );
 	static soundlevel_t LookupSoundLevel( const char *soundname, HSOUNDSCRIPTHANDLE& handle );
@@ -1348,7 +1348,7 @@ public:
 
 	static void StopSound( int iEntIndex, int iChannel, const char *pSample );
 
-	static void EmitAmbientSound( int entindex, const Vector& origin, const char *soundname, int flags = 0, float soundtime = 0.0f, float *duration = NULL );
+	static void EmitAmbientSound( int entindex, const Vector& origin, const char *soundname, int flags = 0, double soundtime = 0.0f, float *duration = NULL );
 
 	// These files need to be listed in scripts/game_sounds_manifest.txt
 	static HSOUNDSCRIPTHANDLE PrecacheScriptSound( const char *soundname );
@@ -1360,7 +1360,7 @@ public:
 	static void EmitCloseCaption( IRecipientFilter& filter, int entindex, char const *token, CUtlVector< Vector >& soundorigins, float duration, bool warnifmissing = false );
 	static void	EmitSentenceByIndex( IRecipientFilter& filter, int iEntIndex, int iChannel, int iSentenceIndex,
 		float flVolume, soundlevel_t iSoundlevel, int iFlags = 0, int iPitch = PITCH_NORM,
-		const Vector *pOrigin = NULL, const Vector *pDirection = NULL, bool bUpdatePositions = true, float soundtime = 0.0f );
+		const Vector *pOrigin = NULL, const Vector *pDirection = NULL, bool bUpdatePositions = true, double soundtime = 0.0f );
 
 	static bool IsPrecacheAllowed();
 	static void SetAllowPrecache( bool allow );
@@ -1538,7 +1538,7 @@ public:
 
 public:
 	// Add a discontinuity to a step
-	bool					AddStepDiscontinuity( float flTime, const Vector &vecOrigin, const QAngle &vecAngles );
+	bool					AddStepDiscontinuity( double flTime, const Vector &vecOrigin, const QAngle &vecAngles );
 	int						GetFirstThinkTick();	// get first tick thinking on any context
 private:
 	// origin and angles to use in step calculations
@@ -1554,9 +1554,9 @@ private:
 	friend class CPushBlockerEnum;
 
 	// Sets/Gets the next think based on context index
-	void SetNextThink( int nContextIndex, float thinkTime );
-	void SetLastThink( int nContextIndex, float thinkTime );
-	float GetNextThink( int nContextIndex ) const;
+	void SetNextThink( int nContextIndex, double thinkTime );
+	void SetLastThink( int nContextIndex, double thinkTime );
+    double GetNextThink( int nContextIndex ) const;
 	int	GetNextThinkTick( int nContextIndex ) const;
 
 	// Shot statistics
@@ -1643,7 +1643,7 @@ private:
 	float			m_flNavIgnoreUntilTime;
 
 	CNetworkHandleForDerived( CBaseEntity, m_hGroundEntity );
-	float			m_flGroundChangeTime; // Time that the ground entity changed
+	double			m_flGroundChangeTime; // Time that the ground entity changed
 
 	string_t		m_ModelName;
 
