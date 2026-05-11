@@ -21,6 +21,7 @@
 #include "shareddefs.h"
 #include "engine/ivmodelinfo.h"
 #include "GarrysMod/Lua/LuaObject.h"
+#include "GarrysMod/IGMODDataTable.h"
 
 class CDamageModifier;
 class CDmgAccumulator;
@@ -1855,15 +1856,15 @@ public:
     virtual void GMOD_DestroyBoneFollowers();
     virtual CBoneFollowerManager *GMOD_GetBoneFollowerMgr();
 
-    char m_szOverrideMaterial[ 256 ];
-    char m_szRealClassName[ 256 ];
-    int m_OverrideMaterial;
-    int m_RealClassName;
-    bool m_bOnFire;
-    float m_CreationTime;
+    char m_strOverrideMaterial[ 256 ];
+    char m_strRealClassName[ 256 ];
+    CNetworkVar( int, m_OverrideMaterial );
+    CNetworkVar( int, m_RealClassName );
+    CNetworkVar( bool, m_bOnFire );
+    CNetworkVar( float, m_CreationTime );
     int m_iParentPhysicsNum;
-    const char* m_szOverrideSubMaterials[ 32 ];
-    int m_OverrideSubMaterials[ 32 ];
+    const char* m_iszOverrideSubMaterials[ 32 ];
+    CNetworkArray( int, m_OverrideSubMaterials, 32 );
     CUtlVector< EHANDLE > m_hDeleteOnRemove;
 
     // CLuaObject layout
@@ -1879,22 +1880,22 @@ public:
 
     GarrysMod::Lua::ILuaObject* m_pLuaTable;
     GarrysMod::Lua::ILuaObject* m_pLuaData;
-    bool m_GMOD_bool[ 32 ];
-    float m_GMOD_float[ 32 ];
-    int m_GMOD_int[ 32 ];
-    Vector m_GMOD_Vector[ 32 ];
-    QAngle m_GMOD_QAngle[ 32 ];
-    EHANDLE m_GMOD_EHANDLE[ 32 ];
-    char m_GMOD_String0[ 512 ];
-    char m_GMOD_String1[ 512 ];
-    char m_GMOD_String2[ 512 ];
-    char m_GMOD_String3[ 512 ];
-    SendProp* m_GMOD_DataTable;
-    int m_iCreationID;
-    int m_iMapCreatedID;
+    CNetworkArray( bool, m_GMOD_bool, 32 );
+    CNetworkArray( float, m_GMOD_float, 32 );
+    CNetworkArray( int, m_GMOD_int, 32 );
+    CNetworkArray( Vector, m_GMOD_Vector, 32 );
+    CNetworkArray( QAngle, m_GMOD_QAngle, 32 );
+    CNetworkArray( EHANDLE, m_GMOD_EHANDLE, 32 );
+    CNetworkArray( char, m_GMOD_String0, 512 );
+    CNetworkArray( char, m_GMOD_String1, 512 );
+    CNetworkArray( char, m_GMOD_String2, 512 );
+    CNetworkArray( char, m_GMOD_String3, 512 );
+    IGMODDataTable* m_GMOD_DataTable;
+    CNetworkVar( int, m_iCreationID );
+    CNetworkVar( int, m_iMapCreatedID );
     EHANDLE m_hDriver;
     CUtlLinkedList< EHANDLE > m_hPlayersToPreventTransmit;
-    int m_iGModFlags;
+    CNetworkVar( int, m_iGModFlags );
 
     struct
     {
