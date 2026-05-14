@@ -69,7 +69,7 @@ void ConVar_PublishToVXConsole();
 typedef void ( *FnCommandCallbackVoid_t )( void );
 typedef void ( *FnCommandCallback_t )( const CCommand &command );
 
-#define COMMAND_COMPLETION_MAXITEMS		128
+#define COMMAND_COMPLETION_MAXITEMS		64
 #define COMMAND_COMPLETION_ITEM_LENGTH	128
 
 //-----------------------------------------------------------------------------
