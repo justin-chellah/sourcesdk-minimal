@@ -399,6 +399,9 @@ public:
 	 */
 	virtual bool ComputeWithOpenGoal( INextBot *bot, const IPathCost &costFunc, const IPathOpenGoalSelector &goalSelector, float maxSearchRadius = 0.0f )
 	{
+        if ( !ValidatePath() )
+            return false;
+
 		VPROF_BUDGET( "ComputeWithOpenGoal", "NextBot" );
 
 		int teamID = bot->GetEntity()->GetTeamNumber();
@@ -587,6 +590,9 @@ public:
 	 */
 	virtual void ComputeAreaCrossing( INextBot *bot, const CNavArea *from, const Vector &fromPos, const CNavArea *to, NavDirType dir, Vector *crossPos ) const;
 
+    virtual void ResetAge( void );
+    virtual bool ValidatePath( void );
+    virtual bool ValidatePathConst( void ) const;
 
 private:
 	enum { MAX_PATH_SEGMENTS = 256 };
@@ -726,6 +732,9 @@ private:
 	AdjInfo m_adjAreaVector[ MAX_ADJ_AREAS ];
 	int m_adjAreaIndex;
 
+public:
+    float m_isGeneratingPath;
+    float m_deleteAfterPathCompute;
 };
 
 
