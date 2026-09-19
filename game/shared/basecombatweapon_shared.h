@@ -525,7 +525,7 @@ public:
 	virtual bool 			ShouldDropOnDie( void );
 	virtual bool 			ShouldDrawViewModel( void );
 	virtual float 			GetLastShootTime( void );
-	virtual void 			UpdateLastShootTime( float );
+	virtual void 			UpdateLastShootTime( double );
 	virtual float 			GetFOV( float );
 	virtual void 			ForcePlayerPickup( CBaseEntity* );
 	virtual void 			OnRangeAttack1( void );
@@ -642,6 +642,9 @@ protected:
 	int						m_iOldState;
 
 #endif // End Client .dll only
+
+    double					m_flLastShootTime;
+    bool					m_bDropped;
 };
 
 #endif // COMBATWEAPON_SHARED_H

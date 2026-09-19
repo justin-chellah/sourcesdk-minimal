@@ -1182,7 +1182,7 @@ private:
 
     int				m_nKickErrors;
 
-    float			m_flSpeakTime;
+    double			m_flSpeakTime;
 
     Vector			m_hullMins;
     Vector			m_hullMaxs;

@@ -425,8 +425,7 @@ public:
 	virtual bool GMOD_GetPlayerIsSpeaking( const edict_t* pClient ) = 0;
 	virtual bool GMOD_ShouldUpdateVoiceMasks() = 0;
 	virtual bool NET_IsHostLocal( const char* unknwon ) = 0;
-
-	virtual void *GetReplay() const = 0;
+    virtual bool GetLightForPointListenServerOnly( const Vector& unused, bool unused2, Vector* unknown ) = 0;
 };
 
 
@@ -574,6 +573,7 @@ public:
 		unsigned int rejectionMessageLen ) = 0;
 	virtual void GMOD_ClientSignOnStateChanged( int userID, int oldState, int newState ) = 0;
 	virtual void GMOD_OnAllSoundsStoppedSV() = 0;
+    virtual void GMOD_OnStringTablesRemoved() = 0;
 };
 
 typedef IServerGameDLL IServerGameDLL008;
