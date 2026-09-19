@@ -524,7 +524,7 @@ public:
 	virtual void 			EquipAmmo( CBaseEntity* );
 	virtual bool 			ShouldDropOnDie( void );
 	virtual bool 			ShouldDrawViewModel( void );
-	virtual float 			GetLastShootTime( void );
+	virtual double 			GetLastShootTime( void );
 	virtual void 			UpdateLastShootTime( double );
 	virtual float 			GetFOV( float );
 	virtual void 			ForcePlayerPickup( CBaseEntity* );
